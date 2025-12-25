@@ -6,6 +6,7 @@ const pool = new Pool({
     connectionString:dbHost
 })
 const client = await pool.connect()
+console.log("database connected")
 
 pool.on("error",(err)=>{
     throw err
@@ -13,7 +14,7 @@ pool.on("error",(err)=>{
 
 process.on("SIGINT",()=>{
     pool.end()
-    console.log("pool disconnected")
+    console.log("database disconnected")
 })
 
 async function test(id:number):Promise<any>{
