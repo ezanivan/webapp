@@ -1,6 +1,10 @@
 import Express from "express"
 import http from "http"
 
+import "dotenv/config"
+
+import {test} from "./database.js"
+
 const PORT = 8080
 let app = Express()
 
