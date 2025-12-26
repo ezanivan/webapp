@@ -3,7 +3,7 @@ import http from "http"
 
 import "dotenv/config"
 
-import {test} from "./database.js"
+import {UserManager} from "./database.js"
 
 const PORT = 8080
 let app = Express()
