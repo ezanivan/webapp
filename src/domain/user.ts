@@ -11,7 +11,7 @@ class User {
 
     static validateUsername(username:string):boolean{
         const pattern: RegExp = /^([a-zA-Z0-9_])*$/ // only include characters from a-Z and 0-9
-        return (pattern.test(username) && username.length < 15)
+        return (pattern.test(username) && username.length < 15 && username.length > 3)
     }
 }
 
