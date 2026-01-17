@@ -39,7 +39,7 @@ class UserManager{
         return res.rows.length != 0
     }
     static async getDataByUsername(username:string):Promise<{username:string,email:string,cash:number}|null>{
-        let res = await client.query("SELECT username,cash FROM \"Userdata\" WHERE username=$1",[username])
+        let res = await client.query("SELECT email,cash FROM \"Userdata\" WHERE username=$1",[username])
         if (res.rows.length == 0)
             return null
         return {username:username,email:res.rows[0].email,cash:res.rows[0].cash}

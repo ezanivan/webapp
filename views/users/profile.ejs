@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%=username%></title>
+</head>
+<body>
+    <form id="profileEdit" method="post" onkeydown="return event.key != 'Enter';">
+        <input name="username" value="<%=username%>" readonly>
+        <button type="button"><img src="../assets/edit.png"></button>
+    </form>
+
+    <p>
+        $<%=cash%>
+    </p>
+
+    <script>
+        //script for profile editing
+        
+
+        let form = document.getElementById("profileEdit")
+
+        let button = form.querySelector("button")
+        let buttonImg = button.querySelector("img")
+
+        let inputs = form.querySelectorAll("input")
+
+        let isEditing = false
+
+        const url = location.href.split('/')
+        const originalUsername = url[url.length-1]
+        console.log(originalUsername)
+        
+        function setEditing(editing){
+            isEditing = editing
+            inputs.forEach(input => input.readOnly = !editing );
+            if (editing){
+                buttonImg.src = "../assets/save.png"
+            }else{
+                buttonImg.src = "../assets/edit.png"
+            }
+        }
+
+        function trimInputs(){
+            inputs.forEach(input=>{
+                input.value = input.value.trim()
+            })
+        }
+
+        button.onclick = (e) => {
+            if (!isEditing){
+                setEditing(true)
+                return
+            }
+
+            const params = {}
+            trimInputs()
+            inputs.forEach(input=>{
+                params[input.name] = input.value
+            })
+
+            if (params.username == originalUsername) return setEditing(false)
+
+            const pattern = /^([a-zA-Z0-9_])*$/     
+            if (!pattern.test(params.username)) return alert("username must include only alphanumeric characters or the special character _")
+            if(params.username.length > 14) return alert("username must be at most 14 characters")
+            if(params.username.length < 4) return alert("username must be at least 4 characters")
+
+
+            button.disabled = true
+            buttonImg.src = "../assets/loading.png"
+
+            fetch(form.action,{
+                method:"POST",
+                headers: { "Content-Type":"application/json" },
+                body: JSON.stringify(params)
+            })
+            .then(res=>res.json())
+            .then(data=>{
+                if (data.redirect) window.location.href = data.redirect
+                if (!data.error) setEditing(false)
+                else {buttonImg.src = "../assets/save.png"; alert(data.error);}
+            })
+            .catch((err)=>{
+                alert("an error occurred")
+                console.error(err)
+            })
+            .finally(()=>{button.disabled = false})
+        }
+    </script>
+</body>
+</html>
