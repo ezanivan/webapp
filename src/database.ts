@@ -6,6 +6,7 @@ const pool = new Pool({
     connectionString:dbHost
 })
 const client = await pool.connect()
+console.log("database connected")
 
 pool.on("error",(err)=>{
     throw err
@@ -13,7 +14,7 @@ pool.on("error",(err)=>{
 
 process.on("SIGINT",()=>{
     pool.end()
-    console.log("pool disconnected")
+    console.log("database disconnected")
 })
 
 class UserManager{
@@ -38,7 +39,7 @@ class UserManager{
         return res.rows.length != 0
     }
     static async getDataByUsername(username:string):Promise<{username:string,email:string,cash:number}|null>{
-        let res = await client.query("SELECT username,cash FROM \"Userdata\" WHERE username=$1",[username])
+        let res = await client.query("SELECT email,cash FROM \"Userdata\" WHERE username=$1",[username])
         if (res.rows.length == 0)
             return null
         return {username:username,email:res.rows[0].email,cash:res.rows[0].cash}

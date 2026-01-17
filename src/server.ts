@@ -5,10 +5,23 @@ import "dotenv/config"
 
 import {UserManager} from "./database.js"
 
+import userRouter from "./routes/user.js"
+
 const PORT = 8080
 let app = Express()
 
 const server = http.createServer(app)
+
+app.set('view engine','ejs')
+
+app.use(Express.json())
+
+app.use(Express.static('views'))
+app.use(Express.static('public'))
+
+app.use(Express.urlencoded({ extended: true }));
+
+app.use("/user",userRouter)
 
 app.get("/",(req,res)=>{
     res.send("ok")
